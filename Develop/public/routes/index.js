@@ -12,6 +12,7 @@ let noteList;
         newNoteBtn = document.querySelector('.new-note');
         noteList = document.querySelectorAll('.list-container .list-group');
         }
+console.log(window.location.pathname === '/notes');
 
 // Show an element
 const show = (elem) => {
