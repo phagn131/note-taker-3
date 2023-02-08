@@ -1,7 +1,8 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const api = require('./js/index.js');
+// const routes = require('./public/routes/index');
+const results = require('./db/db.json')
 
 // Server setup
 const PORT = process.env.PORT || 5001;
