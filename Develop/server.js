@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const api = require('./routes/index.js');
+const api = require('./js/index.js');
 
 // Server setup
 const PORT = process.env.PORT || 5001;
@@ -17,7 +17,7 @@ app.use(express.static('public'));
 
 // GET Route for homepage
 app.get('/', (req, res) =>
-  res.sendFile(path.join(__dirname, 'index.html'))
+  res.sendFile(path.join(__dirname, 'public','index.html'))
 );
 
 // GET Route for feedback page
@@ -27,6 +27,7 @@ app.get('/api/notes', (req, res) =>
   }))
 );
 
+
 app.listen(PORT, () =>
-  console.log(`App listening at http://localhost:${PORT} 🚀`)
+  console.log(`App listening at http://localhost:${PORT} `)
 );
