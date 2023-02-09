@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-// const routes = require('./public/routes/index');
+
 const db = require('./db/db.json')
 const app = express();
 
@@ -31,18 +31,6 @@ app.get('/api/notes', (req, res) => {
   res.json(notes);
 });
 
-// Post request
-app.post('/api/notes', (req, res) => {
-  ;
-});
-
-// Delete request
-app.delete('/api/notes', (req, res) =>
-  fs.readFile(path.join('.Develop/db/db.json').then(function (data) {
-    notes = [].concat.apply(JSON.parse(data))
-  }))
-);
-
 // POST request to add a review
 app.post('/api/notes', (req, res) => {
   // Log that a POST request was received
@@ -60,8 +48,8 @@ app.post('/api/notes', (req, res) => {
       text,
     };
 
-    // Obtain existing reviews
-    fs.readFile('./db/notes.json', 'utf8', (err, data) => {
+    // Obtain existing notes
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
       if (err) {
         console.error(err);
       } else {
@@ -73,8 +61,8 @@ app.post('/api/notes', (req, res) => {
 
         // Write updated reviews back to the file
         fs.writeFile(
-          './db/reviews.json',
-          JSON.stringify(parsedReviews, null, 2),
+          './db/db.json',
+          JSON.stringify(parsedNote, null, 2),
           (writeErr) =>
             writeErr
               ? console.error(writeErr)
@@ -94,6 +82,13 @@ app.post('/api/notes', (req, res) => {
     res.status(500).json('Error in posting note');
   }
 });
+
+// Delete request
+app.delete('/api/notes', (req, res) =>
+  fs.readFile(path.join('.Develop/db/db.json').then(function (data) {
+    notes = [].concat.apply(JSON.parse(data))
+  }))
+);
 
 
 app.listen(PORT, () =>
