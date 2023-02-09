@@ -43,6 +43,58 @@ app.delete('/api/notes', (req, res) =>
   }))
 );
 
+// POST request to add a review
+app.post('/api/notes', (req, res) => {
+  // Log that a POST request was received
+  console.info(`${req.method} request received to add a note`);
+
+  // Destructuring assignment for the items in req.body
+  const { id, title, text } = req.body;
+
+  // If all the required properties are present
+  if (id && title && text) {
+    // Variable for the object we will save
+    const newNote = {
+      id,
+      title,
+      text,
+    };
+
+    // Obtain existing reviews
+    fs.readFile('./db/notes.json', 'utf8', (err, data) => {
+      if (err) {
+        console.error(err);
+      } else {
+        // Convert string into JSON object
+        const parsedNote = JSON.parse(data);
+
+        // Add a new review
+        parsedNote.push(newNote);
+
+        // Write updated reviews back to the file
+        fs.writeFile(
+          './db/reviews.json',
+          JSON.stringify(parsedReviews, null, 2),
+          (writeErr) =>
+            writeErr
+              ? console.error(writeErr)
+              : console.info('Successfully updated note!')
+        );
+      }
+    });
+
+    const response = {
+      status: 'success',
+      body: newNote,
+    };
+
+    console.log(response);
+    res.status(201).json(response);
+  } else {
+    res.status(500).json('Error in posting note');
+  }
+});
+
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT} `)
