@@ -16,29 +16,29 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 // GET Route for homepage
-app.get('/', (req, res) =>
-  fs.readFileSync(path.join(__dirname, 'public', 'routes', 'index.html'))
-);
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'))
+});
+
+app.get('/notes', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'notes.html'))
+});
 
 // Get request
-app.get('/routes/notes', (req, res) =>
-fs.readFileSync(path.join(__dirname, '').then(function(data) {
+app.get('/api/notes', (req, res) => {
+  var data = fs.readFileSync(path.join(__dirname, 'db', 'db.json'))
   notes = [].concat(JSON.parse(data))
   res.json(notes);
-})
-  
-));
+});
 
 // Post request
 app.post('/api/notes', (req, res) => {
-  res.json(`${req.data} request received`);
-  console.info(req.data);
-  console.info(`${req.data} request received`);
+  ;
 });
 
 // Delete request
 app.delete('/api/notes', (req, res) =>
-  fs.readFile(path.join('.Develop/db/db.json').then(function(data) {
+  fs.readFile(path.join('.Develop/db/db.json').then(function (data) {
     notes = [].concat.apply(JSON.parse(data))
   }))
 );
