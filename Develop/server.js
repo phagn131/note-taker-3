@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 // GET Route for homepage
-app.get('/*', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'))
 });
 
@@ -32,7 +32,7 @@ app.get('/api/notes', (req, res) => {
 });
 
 // POST request to add a review
-app.route('/api/notes', (req, res) => {
+app.post('/api/notes', (req, res) => {
   // Log that a POST request was received
   console.info(`${req.method} request received to add a note`);
 
@@ -42,7 +42,7 @@ app.route('/api/notes', (req, res) => {
   // If all the required properties are present
   if (id && title && text) {
     // Variable for the object we will save
-    const newNote = {
+    const activeNote = {
       id,
       title,
       text,
@@ -54,15 +54,15 @@ app.route('/api/notes', (req, res) => {
         console.error(err);
       } else {
         // Convert string into JSON object
-        const parsedNote = JSON.parse(data);
+        const saveNote = JSON.parse(data);
 
-        // Add a new note
-        parsedNote.push(newNote);
+        // Add a new review
+        saveNoteBtn.push(newNote);
 
         // Write updated reviews back to the file
         fs.writeFile(
           './db/db.json',
-          JSON.stringify(parsedNote, null, 2),
+          JSON.stringify(saveNote, null, 2),
           (writeErr) =>
             writeErr
               ? console.error(writeErr)
@@ -70,6 +70,11 @@ app.route('/api/notes', (req, res) => {
         );
       }
     });
+
+    const response = {
+      status: 'success',
+      body: saveNote,
+    };
 
     console.log(response);
     res.status(201).json(response);
@@ -79,7 +84,7 @@ app.route('/api/notes', (req, res) => {
 });
 
 // Delete request
-app.delete('/api/notes/:id', (req, res) =>
+app.delete('/api/notes', (req, res) =>
   fs.readFile(path.join('.Develop/db/db.json').then(function (data) {
     notes = [].concat.apply(JSON.parse(data))
   }))
