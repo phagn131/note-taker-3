@@ -24,7 +24,7 @@ app.get('/notes', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'notes.html'))
 });
 
-// Get request
+// Get request.
 app.get('/api/notes', (req, res) => {
   var data = fs.readFileSync(path.join(__dirname, 'db', 'db.json'))
   notes = [].concat(JSON.parse(data))
