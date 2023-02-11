@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 // GET Route for homepage
-app.get('/', (req, res) => {
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'))
 });
 
@@ -32,7 +32,7 @@ app.get('/api/notes', (req, res) => {
 });
 
 // POST request to add a review
-app.post('/api/notes', (req, res) => {
+app.route('/api/notes', (req, res) => {
   // Log that a POST request was received
   console.info(`${req.method} request received to add a note`);
 
@@ -56,7 +56,7 @@ app.post('/api/notes', (req, res) => {
         // Convert string into JSON object
         const parsedNote = JSON.parse(data);
 
-        // Add a new review
+        // Add a new note
         parsedNote.push(newNote);
 
         // Write updated reviews back to the file
@@ -71,11 +71,6 @@ app.post('/api/notes', (req, res) => {
       }
     });
 
-    const response = {
-      status: 'success',
-      body: newNote,
-    };
-
     console.log(response);
     res.status(201).json(response);
   } else {
@@ -84,7 +79,7 @@ app.post('/api/notes', (req, res) => {
 });
 
 // Delete request
-app.delete('/api/notes', (req, res) =>
+app.delete('/api/notes/:id', (req, res) =>
   fs.readFile(path.join('.Develop/db/db.json').then(function (data) {
     notes = [].concat.apply(JSON.parse(data))
   }))
