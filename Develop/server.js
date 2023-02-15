@@ -1,95 +1,98 @@
+// declare dependencies
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-
-const db = require('./db/db')
+// Assing port for router
+const PORT = 8001;
+// Initialize the express app
 const app = express();
-
-// Server setup
-const PORT = process.env.PORT || 5001;
 
 // Middleware for parsing JSON and urlencoded form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static Middleware
 app.use(express.static('public'));
 
+
 // GET Route for homepage
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'))
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "./public/index.html"))
+});
+// GET Route for notes
+app.get("/notes", (req, res) => {
+   res.sendFile(path.join(__dirname, "./public/notes.html"))
 });
 
-app.get('/notes', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'notes.html'))
-});
-
-// Get request
-app.get('/api/notes', (req, res) => {
-  var data = fs.readFileSync(path.join(__dirname, 'db', 'db.json'))
-  notes = [].concat(JSON.parse(data))
-  res.json(notes);
-});
-
-// POST request to add a note
-app.post('/api/notes', (req, res) => {
-  // Log that a POST request was received
-  console.info(`${req.method} request received to add a note`);
-
-  // Destructuring assignment for the items in req.body
-  const { id, title, text } = req.body;
-
-  // If all the required properties are present
-  if (id && title && text) {
-    // Variable for the object we will save
-    const activeNote = {
-      id,
-      title,
-      text,
-    };
-
-    // Obtain existing notes
-    readAndAppend('./db/db.json', 'utf8', (err, data) => {
-      if (err) {
-        console.error(err);
-      } else {
-        // Convert string into JSON object
-        const saveNote = JSON.parse(data);
-
-        // Add a new note
-        saveNoteBtn.push(newNote);
-
-        // Write updated note to the file
-        fs.writeFile(jsonFilePath, JSON.stringify(database)
-          (saveNote, null, 2),
-          (writeErr) =>
-            writeErr
-              ? console.error(writeErr)
-              : console.info('Successfully updated note!')
-        );
+// Get Route to read data in db.json file 
+app.get("/api/notes", (req, res) => {
+  fs.readFile(path.join(__dirname, "./db/db.json"), "utf8", (error,notes) => {
+      if (error) {
+          return console.log(error)
       }
-    });
-
-    const response = {
-      status: 'success',
-      body: saveNote,
-    };
-
-    console.log(response);
-    res.status(201).json(response);
-  } else {
-    res.status(500).json('Error in posting note');
-  }
+      res.json(JSON.parse(notes))
+  })
 });
 
-// Delete request
-app.delete('/api/notes', (req, res) =>
-  fs.readFile(path.join('./db.json').then(function (data) {
-    notes = [].concat.apply(JSON.parse(data))
-  }))
-);
+// POST Route for a new note
+app.post("/api/notes", (req, res) => {
+    const currentNote = req.body;
+  fs.readFile(path.join(__dirname, "./db/db.json"), "utf8", (error, notes) => {
+      if (error) {
+          return console.log(error)
+      }
+      notes = JSON.parse(notes)
+      if (notes.length > 0) {
+      let lastId = notes[notes.length - 1].id
+      const id =  parseInt(lastId)+ 1
+      } else {
+        var id = 10;
+      }
 
+      const newNote = { 
+        title: currentNote.title, 
+        text: currentNote.text, 
+        id: id 
+        }
+      
+      var newNotesArr = notes.concat(newNote)
+      fs.writeFile(path.join(__dirname, "./db/db.json"), JSON.stringify(newNotesArr), (error, data) => {
+        if (error) {
+          return error
+        }
+        console.log(newNotesArr)
+        res.json(newNotesArr);
+      })
+  });
+ 
+});
+
+// Delete Route for a note using id
+app.delete("/api/notes/:id", (req, res) => {
+  let deleteId = JSON.parse(req.params.id);
+  console.log("ID to be deleted: " ,deleteId);
+  fs.readFile(path.join(__dirname, "./db/db.json"), "utf8", (error,notes) => {
+    if (error) {
+        return console.log(error)
+    }
+   let notesArray = JSON.parse(notes);
+  
+   for (var i=0; i<notesArray.length; i++){
+     if(deleteId == notesArray[i].id) {
+       notesArray.splice(i,1);
+
+       fs.writeFile(path.join(__dirname, "./db/db.json"), JSON.stringify(notesArray), (error, data) => {
+        if (error) {
+          return error
+        }
+        console.log(notesArray)
+        res.json(notesArray);
+      })
+     }
+  }
+  
+}); 
+});
 
 app.listen(PORT, () =>
-  console.log(`App listening at http://localhost:${PORT} `)
+  console.log(`App listening at http://localhost:${PORT}`)
 );
