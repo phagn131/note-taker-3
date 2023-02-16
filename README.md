@@ -1,37 +1,27 @@
 # 11 Express.js: Note Taker
 
-## Your Task
+## The Task
 
-Your assignment is to modify starter code to create an application called Note Taker that can be used to write and save notes. This application will use an Express.js back end and will save and retrieve note data from a JSON file.
-
-The application’s front end has already been created. It's your job to build the back end, connect the two, and then deploy the entire application to Heroku.
 
 
 ## User Story
 
 ```
-AS A small business owner
-I WANT to be able to write and save notes
-SO THAT I can organize my thoughts and keep track of tasks I need to complete
+As a small business person I want a simple note taking app to keep track of tasks and activities during my busy day. I want to be able to add new notes, see them posted and delete notes within a basic user interface
 ```
 
 
 ## Acceptance Criteria
 
 ```
-GIVEN a note-taking application
-WHEN I open the Note Taker
-THEN I am presented with a landing page with a link to a notes page
-WHEN I click on the link to the notes page
-THEN I am presented with a page with existing notes listed in the left-hand column, plus empty fields to enter a new note title and the note’s text in the right-hand column
-WHEN I enter a new note title and the note’s text
-THEN a Save icon appears in the navigation at the top of the page
-WHEN I click on the Save icon
-THEN the new note I have entered is saved and appears in the left-hand column with the other existing notes
-WHEN I click on an existing note in the list in the left-hand column
-THEN that note appears in the right-hand column
-WHEN I click on the Write icon in the navigation at the top of the page
-THEN I am presented with empty fields to enter a new note title and the note’s text in the right-hand column
+When I open the app I am taken to the home page where I can click on a button
+to go to the notes page 
+I am then presented with the existing notes on the left-column
+and an empty field to add new notes and save them with the save button to render in the list on the left-column
+When I click on the existing notes the notes populate to the right-column
+If I want to add a new note I click on the + sign in the nav bar and can enter a new note
+I can delete a note from the notes page by selecting it in the left-column and click on the delete icon
+
 ```
 
 
